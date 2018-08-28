@@ -6,6 +6,7 @@ cd gestao_clientes_django/ <br />
 pip install -r requirements-dev.txt <br />
 criar arquivo .env com: <br />
  ->SECRET_KEY=dafaasdsadsadsadasd <br />
+ ->DEBUG=True
 python manage.py migrate <br />
 python manage.py createsuperuser <br />
 python manage.py runserver <br />
