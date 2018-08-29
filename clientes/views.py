@@ -1,9 +1,12 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from .models import Person, Produto
+from .models import Person
+from produtos.models import Produto
+from vendas.models import Venda
 from .forms import PersonForm
 from django.views.generic import View
 from django.views.generic.list import ListView
@@ -20,6 +23,9 @@ def persons_list(request):
 
 @login_required
 def persons_new(request):
+    if not request.user.has_perm('clientes.add_person'):
+        return HttpResponse('Nao autorizado')
+
     form = PersonForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
@@ -50,10 +56,10 @@ def persons_delete(request, id):
 
     return render(request, 'person_delete_confirm.html', {'person': person})
 
-class PersonList(ListView):
+class PersonList(LoginRequiredMixin, ListView):
     model = Person
 
-class PersonDetail(DetailView):
+class PersonDetail(LoginRequiredMixin,DetailView):
     model = Person
 
     def get_object(self, queryset=None):
@@ -65,17 +71,18 @@ class PersonDetail(DetailView):
         context['now'] = timezone.now()
         return context
 
-class PersonCreate(CreateView):
+class PersonCreate(LoginRequiredMixin,CreateView):
     model = Person
     fields = ['first_name', 'last_name', 'age', 'salary', 'bio', 'photo']
     success_url = '/clientes/person_list'
 
-class PersonUpdate(UpdateView):
+class PersonUpdate(LoginRequiredMixin,UpdateView):
     model = Person
     fields = ['first_name', 'last_name', 'age', 'salary', 'bio', 'photo']
     success_url = reverse_lazy('person_list_cbv')
 
-class PersonDelete(DeleteView):
+class PersonDelete(LoginRequiredMixin, PermissionRequiredMixin,DeleteView):
+    permission_required = ('clientes.deletar_clientes')
     model = Person
     #success_url = reverse_lazy('person_list_cbv')
 

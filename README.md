@@ -12,3 +12,5 @@ python manage.py createsuperuser <br />
 python manage.py runserver <br />
 pip install django-debug-toolbar <br />
 python manage.py collectstatic <br />
+python manage.py startapp produtos <br />
+python manage.py startapp vendas <br />
