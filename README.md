@@ -10,3 +10,5 @@ criar arquivo .env com: <br />
 python manage.py migrate <br />
 python manage.py createsuperuser <br />
 python manage.py runserver <br />
+pip install django-debug-toolbar <br />
+python manage.py collectstatic <br />
